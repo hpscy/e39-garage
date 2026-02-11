@@ -1,0 +1,1290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E39 Garage - BMW E39 Projects & Tips</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2196F3;
+            --primary-light: #64B5F6;
+            --accent: #FF6B35;
+            --success: #4CAF50;
+            --bg-dark: #1a1d24;
+            --bg-card: #242831;
+            --bg-hover: #2d323e;
+            --text-primary: #e8edf2;
+            --text-secondary: #9ca3af;
+            --border: #353b48;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            line-height: 1.7;
+        }
+
+        .hidden { display: none !important; }
+
+        /* Header */
+        header {
+            background: rgba(26, 29, 36, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        nav {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            cursor: pointer;
+        }
+
+        .logo span {
+            color: var(--text-primary);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+            cursor: pointer;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: gap 0.3s ease;
+            margin-bottom: 2rem;
+        }
+
+        .back-button:hover {
+            gap: 0.8rem;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-family: 'Nunito', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-light);
+            transform: translateY(-2px);
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #45a049;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-secondary:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-small {
+            padding: 0.5rem 1rem;
+            font-size: 0.85rem;
+        }
+
+        /* Hero */
+        .hero {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 4rem 2rem 3rem;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .hero h1 .highlight {
+            color: var(--primary);
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+
+        .section-header {
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .section-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .section-subtitle {
+            color: var(--text-secondary);
+            font-size: 1.05rem;
+        }
+
+        /* Stats */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            padding: 2rem;
+            border-radius: 12px;
+            text-align: center;
+            border: 1px solid var(--border);
+        }
+
+        .stat-number {
+            font-family: 'Poppins', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--primary);
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        /* Car Cards */
+        .car-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        .car-card {
+            background: var(--bg-card);
+            border-radius: 12px;
+            overflow: hidden;
+            border: 2px solid var(--border);
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+        }
+
+        .car-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(33, 150, 243, 0.2);
+            border-color: var(--primary);
+        }
+
+        .car-image {
+            width: 100%;
+            height: 250px;
+            background: linear-gradient(135deg, #2d323e 0%, #242831 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            border-bottom: 3px solid var(--primary);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .car-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .car-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: var(--primary);
+            color: white;
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .car-content {
+            padding: 2rem;
+        }
+
+        .car-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .car-subtitle {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .car-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: rgba(33, 150, 243, 0.05);
+            border-radius: 8px;
+        }
+
+        .car-stat-item {
+            text-align: center;
+        }
+
+        .car-stat-value {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--primary);
+            display: block;
+        }
+
+        .car-stat-label {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-top: 0.2rem;
+        }
+
+        /* Entry Grid */
+        .entry-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        .entry-card {
+            background: var(--bg-card);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid var(--border);
+            cursor: pointer;
+        }
+
+        .entry-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(33, 150, 243, 0.2);
+            border-color: var(--primary);
+        }
+
+        .entry-image {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, #2d323e 0%, #242831 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3.5rem;
+            border-bottom: 2px solid var(--primary);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .entry-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .entry-content {
+            padding: 1.5rem;
+        }
+
+        .entry-tag {
+            display: inline-block;
+            background: rgba(33, 150, 243, 0.2);
+            color: var(--primary);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .entry-tag.maintenance {
+            background: rgba(255, 107, 53, 0.2);
+            color: var(--accent);
+        }
+
+        .entry-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 0.8rem;
+            color: var(--text-primary);
+        }
+
+        .entry-description {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            margin-bottom: 1rem;
+            line-height: 1.6;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .entry-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border);
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .entry-author {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .author-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+
+        /* Forms */
+        .form-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .form-card {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 2rem;
+            border: 1px solid var(--border);
+            margin-bottom: 2rem;
+        }
+
+        .form-card h2 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            color: var(--text-primary);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .form-input,
+        .form-textarea,
+        .form-select {
+            width: 100%;
+            padding: 0.8rem;
+            background: var(--bg-hover);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-family: 'Nunito', sans-serif;
+            font-size: 0.95rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-input:focus,
+        .form-textarea:focus,
+        .form-select:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 150px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+            margin-top: 2rem;
+        }
+
+        .parts-input-group {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .parts-input-group input {
+            flex: 1;
+        }
+
+        .parts-list-display {
+            margin-top: 0.5rem;
+        }
+
+        .parts-list-display .part-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem;
+            background: var(--bg-hover);
+            border-radius: 4px;
+            margin-bottom: 0.5rem;
+        }
+
+        .part-item button {
+            background: transparent;
+            border: none;
+            color: var(--accent);
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+
+        /* Image Upload */
+        .image-upload {
+            border: 2px dashed var(--border);
+            border-radius: 8px;
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .image-upload:hover {
+            border-color: var(--primary);
+            background: var(--bg-hover);
+        }
+
+        .image-upload input {
+            display: none;
+        }
+
+        .image-preview {
+            margin-top: 1rem;
+            max-width: 100%;
+            max-height: 300px;
+            border-radius: 8px;
+        }
+
+        .upload-icon {
+            font-size: 3rem;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+        }
+
+        .upload-text {
+            color: var(--text-secondary);
+        }
+
+        /* Entry Detail */
+        .entry-detail {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .entry-hero {
+            background: var(--bg-card);
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            margin-bottom: 2rem;
+        }
+
+        .entry-hero-image {
+            width: 100%;
+            height: 400px;
+            background: linear-gradient(135deg, #2d323e 0%, #242831 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 6rem;
+            border-bottom: 3px solid var(--primary);
+        }
+
+        .entry-hero-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .entry-hero-content {
+            padding: 2rem;
+        }
+
+        .entry-meta {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .meta-badge {
+            background: rgba(33, 150, 243, 0.2);
+            color: var(--primary);
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .meta-badge.maintenance {
+            background: rgba(255, 107, 53, 0.2);
+            color: var(--accent);
+        }
+
+        .entry-detail-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+        }
+
+        .entry-detail-description {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+            white-space: pre-wrap;
+        }
+
+        .detail-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background: rgba(33, 150, 243, 0.05);
+            border-radius: 8px;
+        }
+
+        .detail-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .detail-label {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.2rem;
+        }
+
+        .detail-value {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .parts-list {
+            list-style: none;
+            margin-top: 1.5rem;
+        }
+
+        .parts-list li {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid var(--border);
+            color: var(--text-secondary);
+        }
+
+        .parts-list li:last-child {
+            border-bottom: none;
+        }
+
+        .parts-list li::before {
+            content: "✓ ";
+            color: var(--primary);
+            font-weight: 700;
+            margin-right: 0.5rem;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: var(--text-secondary);
+        }
+
+        .empty-state-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        .empty-state h3 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--bg-card);
+            border-top: 1px solid var(--border);
+            padding: 2rem;
+            margin-top: 4rem;
+            text-align: center;
+            color: var(--text-secondary);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .nav-links {
+                gap: 1rem;
+            }
+
+            .nav-links a:not(.btn) {
+                display: none;
+            }
+
+            .entry-grid, .car-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .entry-hero-image {
+                height: 250px;
+                font-size: 4rem;
+            }
+
+            .entry-detail-title {
+                font-size: 1.8rem;
+            }
+
+            .section-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Home View -->
+    <div id="home-view">
+        <header>
+            <nav>
+                <div class="logo" onclick="showHome()">E39 <span>Garage</span></div>
+                <ul class="nav-links">
+                    <li><a onclick="showHome()">Home</a></li>
+                    <li>
+                        <a class="btn btn-primary btn-small" onclick="showAddEntry()">
+                            + Add Entry
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </header>
+
+        <section class="hero">
+            <h1>My <span class="highlight">E39</span> Garage</h1>
+            <p>A collection of my E39 builds, projects, and lessons learned along the way</p>
+        </section>
+
+        <div class="container">
+            <div class="stats">
+                <div class="stat-card">
+                    <span class="stat-number" id="total-entries">0</span>
+                    <span class="stat-label">Total Entries</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">2</span>
+                    <span class="stat-label">E39s Owned</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number" id="years-exp">10</span>
+                    <span class="stat-label">Years Experience</span>
+                </div>
+            </div>
+
+            <section id="cars">
+                <div class="section-header">
+                    <div>
+                        <h2 class="section-title">My E39 Collection</h2>
+                        <p class="section-subtitle">The cars that started it all</p>
+                    </div>
+                </div>
+                
+                <div class="car-grid">
+                    <div class="car-card">
+                        <div class="car-image">
+                            <span>🚗</span>
+                            <div class="car-badge">Daily</div>
+                        </div>
+                        <div class="car-content">
+                            <h3 class="car-title">2001 530i</h3>
+                            <p class="car-subtitle">Daily Driver</p>
+                            <div class="car-stats">
+                                <div class="car-stat-item">
+                                    <span class="car-stat-value" id="530i-years">10</span>
+                                    <span class="car-stat-label">Years Owned</span>
+                                </div>
+                                <div class="car-stat-item">
+                                    <span class="car-stat-value">TBD</span>
+                                    <span class="car-stat-label">Mileage</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="car-card">
+                        <div class="car-image">
+                            <span>🏁</span>
+                            <div class="car-badge">M Power</div>
+                        </div>
+                        <div class="car-content">
+                            <h3 class="car-title">2001 M5</h3>
+                            <p class="car-subtitle">Weekend Warrior</p>
+                            <div class="car-stats">
+                                <div class="car-stat-item">
+                                    <span class="car-stat-value" id="m5-years">2</span>
+                                    <span class="car-stat-label">Years Owned</span>
+                                </div>
+                                <div class="car-stat-item">
+                                    <span class="car-stat-value">TBD</span>
+                                    <span class="car-stat-label">Mileage</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="entries">
+                <div class="section-header">
+                    <div>
+                        <h2 class="section-title">Work Log</h2>
+                        <p class="section-subtitle">Projects and maintenance entries</p>
+                    </div>
+                </div>
+                
+                <div class="entry-grid" id="entry-grid"></div>
+            </section>
+        </div>
+
+        <footer>
+            <p>E39 Garage - A hobbyist's collection of BMW E39 projects and tips</p>
+            <p style="margin-top: 0.5rem; font-size: 0.85rem;">
+                Built with ❤️ for the E39 community • Data saved locally in your browser
+            </p>
+        </footer>
+    </div>
+
+    <!-- Add Entry View -->
+    <div id="add-entry-view" class="hidden">
+        <header>
+            <nav>
+                <div class="logo">E39 <span>Garage</span></div>
+                <ul class="nav-links">
+                    <li><a onclick="showHome()">Home</a></li>
+                </ul>
+            </nav>
+        </header>
+
+        <div class="container">
+            <div class="form-container">
+                <a class="back-button" onclick="showHome()">
+                    ← Cancel
+                </a>
+
+                <form id="entry-form" onsubmit="saveEntry(event)">
+                    <div class="form-card">
+                        <h2>Add New Entry</h2>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Car</label>
+                                <select class="form-select" id="entry-car" required>
+                                    <option value="530i">2001 530i</option>
+                                    <option value="M5">2001 M5</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Type</label>
+                                <select class="form-select" id="entry-type" required>
+                                    <option value="project">Project</option>
+                                    <option value="maintenance">Maintenance</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Title</label>
+                            <input 
+                                type="text"
+                                class="form-input"
+                                id="entry-title"
+                                placeholder="e.g., Complete Suspension Refresh"
+                                required
+                            />
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Description</label>
+                            <textarea 
+                                class="form-textarea"
+                                id="entry-description"
+                                placeholder="Describe what you did, why you did it, what you learned..."
+                                required
+                                oninput="updateEmoji()"
+                            ></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Upload Photo (Optional)</label>
+                            <label class="image-upload" id="upload-area">
+                                <input 
+                                    type="file"
+                                    accept="image/*"
+                                    id="entry-image"
+                                    onchange="handleImageUpload(event)"
+                                />
+                                <div id="upload-placeholder">
+                                    <div class="upload-icon">📷</div>
+                                    <div class="upload-text">Click to upload a photo</div>
+                                </div>
+                                <img id="image-preview" class="image-preview hidden" />
+                            </label>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Date</label>
+                                <input 
+                                    type="text"
+                                    class="form-input"
+                                    id="entry-date"
+                                    placeholder="e.g., March 2024"
+                                    required
+                                />
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Mileage (Optional)</label>
+                                <input 
+                                    type="text"
+                                    class="form-input"
+                                    id="entry-mileage"
+                                    placeholder="e.g., 185,200"
+                                />
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Cost (Optional)</label>
+                                <input 
+                                    type="text"
+                                    class="form-input"
+                                    id="entry-cost"
+                                    placeholder="e.g., $320"
+                                />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Parts Used (Optional)</label>
+                            <div class="parts-input-group">
+                                <input 
+                                    type="text"
+                                    class="form-input"
+                                    id="part-input"
+                                    placeholder="Enter a part..."
+                                    onkeypress="if(event.key==='Enter'){event.preventDefault();addPart();}"
+                                />
+                                <button type="button" class="btn btn-primary" onclick="addPart()">
+                                    Add
+                                </button>
+                            </div>
+                            <div class="parts-list-display" id="parts-list"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Auto-detected Emoji: <span id="emoji-display">🔧</span></label>
+                            <p style="font-size: 0.85rem; color: var(--text-secondary);">
+                                Emoji is automatically chosen based on your description
+                            </p>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-secondary" onclick="showHome()">
+                                Cancel
+                            </button>
+                            <button type="submit" class="btn btn-success">
+                                Save Entry
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Entry Detail View -->
+    <div id="entry-detail-view" class="hidden">
+        <header>
+            <nav>
+                <div class="logo">E39 <span>Garage</span></div>
+                <ul class="nav-links">
+                    <li><a onclick="showHome()">Home</a></li>
+                </ul>
+            </nav>
+        </header>
+
+        <div class="container">
+            <div class="entry-detail">
+                <a class="back-button" onclick="showHome()">
+                    ← Back to Home
+                </a>
+
+                <div class="entry-hero">
+                    <div class="entry-hero-image" id="detail-image"></div>
+                    <div class="entry-hero-content" id="detail-content"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Data storage
+        let entries = JSON.parse(localStorage.getItem('e39Entries') || '[]');
+        let currentParts = [];
+        let currentImage = null;
+        let currentEmoji = '🔧';
+
+        // Initialize
+        updateStats();
+        renderEntries();
+
+        // Emoji detection
+        function detectEmoji(text) {
+            const lower = text.toLowerCase();
+            if (lower.includes('suspension') || lower.includes('control arm') || lower.includes('bushing') || lower.includes('shock')) return '🛞';
+            if (lower.includes('oil') || lower.includes('fluid')) return '🛢️';
+            if (lower.includes('brake') || lower.includes('rotor') || lower.includes('caliper') || lower.includes('pad')) return '🛑';
+            if (lower.includes('coolant') || lower.includes('radiator') || lower.includes('water pump') || lower.includes('thermostat')) return '🌡️';
+            if (lower.includes('electrical') || lower.includes('battery') || lower.includes('alternator') || lower.includes('wire') || lower.includes('pixel') || lower.includes('cluster') || lower.includes('light')) return '💡';
+            if (lower.includes('interior') || lower.includes('seat') || lower.includes('trim') || lower.includes('carpet')) return '🪑';
+            if (lower.includes('paint') || lower.includes('bodywork') || lower.includes('bumper') || lower.includes('headlight')) return '🎨';
+            if (lower.includes('audio') || lower.includes('speaker') || lower.includes('radio') || lower.includes('head unit')) return '📻';
+            if (lower.includes('transmission') || lower.includes('clutch') || lower.includes('gearbox')) return '⚙️';
+            if (lower.includes('engine') || lower.includes('motor') || lower.includes('timing') || lower.includes('vanos')) return '🔧';
+            return '🔧';
+        }
+
+        function updateEmoji() {
+            const desc = document.getElementById('entry-description').value;
+            currentEmoji = detectEmoji(desc);
+            document.getElementById('emoji-display').textContent = currentEmoji;
+        }
+
+        // Image upload
+        function handleImageUpload(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    currentImage = event.target.result;
+                    document.getElementById('upload-placeholder').classList.add('hidden');
+                    const preview = document.getElementById('image-preview');
+                    preview.src = currentImage;
+                    preview.classList.remove('hidden');
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // Parts management
+        function addPart() {
+            const input = document.getElementById('part-input');
+            const part = input.value.trim();
+            if (part) {
+                currentParts.push(part);
+                input.value = '';
+                renderParts();
+            }
+        }
+
+        function removePart(index) {
+            currentParts.splice(index, 1);
+            renderParts();
+        }
+
+        function renderParts() {
+            const container = document.getElementById('parts-list');
+            container.innerHTML = currentParts.map((part, i) => `
+                <div class="part-item">
+                    <span>${part}</span>
+                    <button type="button" onclick="removePart(${i})">×</button>
+                </div>
+            `).join('');
+        }
+
+        // Save entry
+        function saveEntry(e) {
+            e.preventDefault();
+            
+            const entry = {
+                id: Date.now(),
+                car: document.getElementById('entry-car').value,
+                type: document.getElementById('entry-type').value,
+                title: document.getElementById('entry-title').value,
+                description: document.getElementById('entry-description').value,
+                date: document.getElementById('entry-date').value,
+                mileage: document.getElementById('entry-mileage').value,
+                cost: document.getElementById('entry-cost').value,
+                parts: currentParts,
+                image: currentImage,
+                emoji: currentEmoji
+            };
+
+            entries.push(entry);
+            localStorage.setItem('e39Entries', JSON.stringify(entries));
+            
+            // Reset form
+            document.getElementById('entry-form').reset();
+            currentParts = [];
+            currentImage = null;
+            currentEmoji = '🔧';
+            document.getElementById('parts-list').innerHTML = '';
+            document.getElementById('upload-placeholder').classList.remove('hidden');
+            document.getElementById('image-preview').classList.add('hidden');
+            document.getElementById('emoji-display').textContent = '🔧';
+            
+            updateStats();
+            renderEntries();
+            showHome();
+        }
+
+        // Render entries
+        function renderEntries() {
+            const container = document.getElementById('entry-grid');
+            
+            if (entries.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state" style="grid-column: 1/-1;">
+                        <div class="empty-state-icon">🔧</div>
+                        <h3>No Entries Yet</h3>
+                        <p>Click '+ Add Entry' to start documenting your work!</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = entries.map(entry => `
+                <div class="entry-card" onclick="showEntryDetail(${entry.id})">
+                    <div class="entry-image">
+                        ${entry.image ? `<img src="${entry.image}" alt="${entry.title}" />` : `<span>${entry.emoji}</span>`}
+                    </div>
+                    <div class="entry-content">
+                        <span class="entry-tag ${entry.type === 'maintenance' ? 'maintenance' : ''}">
+                            ${entry.type === 'project' ? 'Project' : 'Maintenance'}
+                        </span>
+                        <h3 class="entry-title">${entry.title}</h3>
+                        <p class="entry-description">${entry.description}</p>
+                        <div class="entry-footer">
+                            <div class="entry-author">
+                                <div class="author-avatar">ME</div>
+                                <span>${entry.car}</span>
+                            </div>
+                            <span>${entry.date}</span>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Update stats
+        function updateStats() {
+            document.getElementById('total-entries').textContent = entries.length;
+            const currentYear = new Date().getFullYear();
+            document.getElementById('years-exp').textContent = currentYear - 2015;
+            document.getElementById('530i-years').textContent = currentYear - 2015;
+            document.getElementById('m5-years').textContent = currentYear - 2023;
+        }
+
+        // Show entry detail
+        function showEntryDetail(id) {
+            const entry = entries.find(e => e.id === id);
+            if (!entry) return;
+
+            const imageHtml = entry.image 
+                ? `<img src="${entry.image}" alt="${entry.title}" />`
+                : `<span>${entry.emoji}</span>`;
+
+            document.getElementById('detail-image').innerHTML = imageHtml;
+
+            let contentHtml = `
+                <div class="entry-meta">
+                    <span class="meta-badge ${entry.type === 'maintenance' ? 'maintenance' : ''}">
+                        ${entry.type === 'project' ? 'Project' : 'Maintenance'}
+                    </span>
+                    <span class="meta-badge">${entry.car}</span>
+                    <span class="meta-badge">${entry.date}</span>
+                </div>
+                <h1 class="entry-detail-title">${entry.title}</h1>
+                <p class="entry-detail-description">${entry.description}</p>
+            `;
+
+            if (entry.mileage || entry.cost) {
+                contentHtml += `<div class="detail-info">`;
+                if (entry.mileage) {
+                    contentHtml += `
+                        <div class="detail-item">
+                            <span class="detail-label">Mileage</span>
+                            <span class="detail-value">${entry.mileage}</span>
+                        </div>
+                    `;
+                }
+                if (entry.cost) {
+                    contentHtml += `
+                        <div class="detail-item">
+                            <span class="detail-label">Cost</span>
+                            <span class="detail-value">${entry.cost}</span>
+                        </div>
+                    `;
+                }
+                contentHtml += `</div>`;
+            }
+
+            if (entry.parts && entry.parts.length > 0) {
+                contentHtml += `
+                    <div style="margin-top: 1.5rem;">
+                        <h3 style="font-size: 1.2rem; margin-bottom: 0.8rem;">Parts Used</h3>
+                        <ul class="parts-list">
+                            ${entry.parts.map(part => `<li>${part}</li>`).join('')}
+                        </ul>
+                    </div>
+                `;
+            }
+
+            document.getElementById('detail-content').innerHTML = contentHtml;
+
+            showView('entry-detail-view');
+        }
+
+        // View management
+        function showView(viewId) {
+            document.getElementById('home-view').classList.add('hidden');
+            document.getElementById('add-entry-view').classList.add('hidden');
+            document.getElementById('entry-detail-view').classList.add('hidden');
+            document.getElementById(viewId).classList.remove('hidden');
+            window.scrollTo(0, 0);
+        }
+
+        function showHome() {
+            showView('home-view');
+        }
+
+        function showAddEntry() {
+            showView('add-entry-view');
+        }
+    </script>
+</body>
+</html>
