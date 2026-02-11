@@ -248,6 +248,8 @@
             overflow: hidden;
             border: 2px solid var(--border);
             transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+            cursor: pointer;
+            position: relative;
         }
 
         .car-card:hover {
@@ -286,6 +288,28 @@
             font-size: 0.75rem;
             font-weight: 700;
             text-transform: uppercase;
+            z-index: 10;
+        }
+
+        .edit-car-photo {
+            position: absolute;
+            bottom: 1rem;
+            right: 1rem;
+            background: rgba(33, 150, 243, 0.9);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            z-index: 10;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .car-card:hover .edit-car-photo {
+            opacity: 1;
         }
 
         .car-content {
@@ -310,7 +334,6 @@
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 1rem;
-            margin-bottom: 1.5rem;
             padding: 1rem;
             background: rgba(33, 150, 243, 0.05);
             border-radius: 8px;
@@ -425,22 +448,78 @@
             color: var(--text-secondary);
         }
 
-        .entry-author {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
+        /* Photo Gallery */
+        .photo-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-top: 1.5rem;
         }
 
-        .author-avatar {
-            width: 32px;
-            height: 32px;
+        .gallery-item {
+            position: relative;
+            aspect-ratio: 1;
+            border-radius: 8px;
+            overflow: hidden;
+            cursor: pointer;
+            border: 2px solid var(--border);
+            transition: border-color 0.3s ease;
+        }
+
+        .gallery-item:hover {
+            border-color: var(--primary);
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .remove-photo {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background: rgba(255, 51, 102, 0.9);
+            color: white;
+            border: none;
+            width: 24px;
+            height: 24px;
             border-radius: 50%;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            cursor: pointer;
+            font-size: 1rem;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: 700;
-            font-size: 0.9rem;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .gallery-item:hover .remove-photo {
+            opacity: 1;
+        }
+
+        .add-photo-btn {
+            aspect-ratio: 1;
+            border: 2px dashed var(--border);
+            border-radius: 8px;
+            background: var(--bg-hover);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 2rem;
+            color: var(--text-secondary);
+        }
+
+        .add-photo-btn:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .add-photo-btn input {
+            display: none;
         }
 
         /* Forms */
@@ -544,42 +623,6 @@
             color: var(--accent);
             cursor: pointer;
             font-size: 1.2rem;
-        }
-
-        /* Image Upload */
-        .image-upload {
-            border: 2px dashed var(--border);
-            border-radius: 8px;
-            padding: 2rem;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .image-upload:hover {
-            border-color: var(--primary);
-            background: var(--bg-hover);
-        }
-
-        .image-upload input {
-            display: none;
-        }
-
-        .image-preview {
-            margin-top: 1rem;
-            max-width: 100%;
-            max-height: 300px;
-            border-radius: 8px;
-        }
-
-        .upload-icon {
-            font-size: 3rem;
-            color: var(--text-secondary);
-            margin-bottom: 1rem;
-        }
-
-        .upload-text {
-            color: var(--text-secondary);
         }
 
         /* Entry Detail */
@@ -774,11 +817,6 @@
                 <div class="logo" onclick="showHome()">E39 <span>Garage</span></div>
                 <ul class="nav-links">
                     <li><a onclick="showHome()">Home</a></li>
-                    <li>
-                        <a class="btn btn-primary btn-small" onclick="showAddEntry()">
-                            + Add Entry
-                        </a>
-                    </li>
                 </ul>
             </nav>
         </header>
@@ -808,64 +846,11 @@
                 <div class="section-header">
                     <div>
                         <h2 class="section-title">My E39 Collection</h2>
-                        <p class="section-subtitle">The cars that started it all</p>
+                        <p class="section-subtitle">Click on a car to see its work log</p>
                     </div>
                 </div>
                 
-                <div class="car-grid">
-                    <div class="car-card">
-                        <div class="car-image">
-                            <span>🚗</span>
-                            <div class="car-badge">Daily</div>
-                        </div>
-                        <div class="car-content">
-                            <h3 class="car-title">2001 530i</h3>
-                            <p class="car-subtitle">Daily Driver</p>
-                            <div class="car-stats">
-                                <div class="car-stat-item">
-                                    <span class="car-stat-value" id="530i-years">10</span>
-                                    <span class="car-stat-label">Years Owned</span>
-                                </div>
-                                <div class="car-stat-item">
-                                    <span class="car-stat-value">TBD</span>
-                                    <span class="car-stat-label">Mileage</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="car-card">
-                        <div class="car-image">
-                            <span>🏁</span>
-                            <div class="car-badge">M Power</div>
-                        </div>
-                        <div class="car-content">
-                            <h3 class="car-title">2001 M5</h3>
-                            <p class="car-subtitle">Weekend Warrior</p>
-                            <div class="car-stats">
-                                <div class="car-stat-item">
-                                    <span class="car-stat-value" id="m5-years">2</span>
-                                    <span class="car-stat-label">Years Owned</span>
-                                </div>
-                                <div class="car-stat-item">
-                                    <span class="car-stat-value">TBD</span>
-                                    <span class="car-stat-label">Mileage</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <section id="entries">
-                <div class="section-header">
-                    <div>
-                        <h2 class="section-title">Work Log</h2>
-                        <p class="section-subtitle">Projects and maintenance entries</p>
-                    </div>
-                </div>
-                
-                <div class="entry-grid" id="entry-grid"></div>
+                <div class="car-grid" id="car-grid"></div>
             </section>
         </div>
 
@@ -877,20 +862,62 @@
         </footer>
     </div>
 
+    <!-- Car Detail View -->
+    <div id="car-view" class="hidden">
+        <header>
+            <nav>
+                <div class="logo" onclick="showHome()">E39 <span>Garage</span></div>
+                <ul class="nav-links">
+                    <li><a onclick="showHome()">Home</a></li>
+                    <li>
+                        <a class="btn btn-primary btn-small" onclick="showAddEntry()">
+                            + Add Entry
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </header>
+
+        <div class="container">
+            <a class="back-button" onclick="showHome()">
+                ← Back to Garage
+            </a>
+
+            <div class="entry-hero">
+                <div class="entry-hero-image" id="car-detail-image"></div>
+                <div class="entry-hero-content">
+                    <h1 class="entry-detail-title" id="car-detail-title"></h1>
+                    <div class="detail-info" id="car-detail-stats"></div>
+                </div>
+            </div>
+
+            <section id="car-entries">
+                <div class="section-header">
+                    <div>
+                        <h2 class="section-title">Work Log</h2>
+                        <p class="section-subtitle" id="car-entries-subtitle"></p>
+                    </div>
+                </div>
+                
+                <div class="entry-grid" id="car-entry-grid"></div>
+            </section>
+        </div>
+    </div>
+
     <!-- Add Entry View -->
     <div id="add-entry-view" class="hidden">
         <header>
             <nav>
                 <div class="logo">E39 <span>Garage</span></div>
                 <ul class="nav-links">
-                    <li><a onclick="showHome()">Home</a></li>
+                    <li><a onclick="returnFromAddEntry()">Cancel</a></li>
                 </ul>
             </nav>
         </header>
 
         <div class="container">
             <div class="form-container">
-                <a class="back-button" onclick="showHome()">
+                <a class="back-button" onclick="returnFromAddEntry()">
                     ← Cancel
                 </a>
 
@@ -939,20 +966,18 @@
                         </div>
 
                         <div class="form-group">
-                            <label class="form-label">Upload Photo (Optional)</label>
-                            <label class="image-upload" id="upload-area">
-                                <input 
-                                    type="file"
-                                    accept="image/*"
-                                    id="entry-image"
-                                    onchange="handleImageUpload(event)"
-                                />
-                                <div id="upload-placeholder">
-                                    <div class="upload-icon">📷</div>
-                                    <div class="upload-text">Click to upload a photo</div>
-                                </div>
-                                <img id="image-preview" class="image-preview hidden" />
-                            </label>
+                            <label class="form-label">Photos (Optional)</label>
+                            <div class="photo-gallery" id="entry-photos-preview">
+                                <label class="add-photo-btn">
+                                    <input 
+                                        type="file"
+                                        accept="image/*"
+                                        multiple
+                                        onchange="handleEntryPhotos(event)"
+                                    />
+                                    📷
+                                </label>
+                            </div>
                         </div>
 
                         <div class="form-row">
@@ -1013,7 +1038,7 @@
                         </div>
 
                         <div class="form-actions">
-                            <button type="button" class="btn btn-secondary" onclick="showHome()">
+                            <button type="button" class="btn btn-secondary" onclick="returnFromAddEntry()">
                                 Cancel
                             </button>
                             <button type="submit" class="btn btn-success">
@@ -1032,15 +1057,15 @@
             <nav>
                 <div class="logo">E39 <span>Garage</span></div>
                 <ul class="nav-links">
-                    <li><a onclick="showHome()">Home</a></li>
+                    <li><a onclick="returnFromEntryDetail()">Back</a></li>
                 </ul>
             </nav>
         </header>
 
         <div class="container">
             <div class="entry-detail">
-                <a class="back-button" onclick="showHome()">
-                    ← Back to Home
+                <a class="back-button" onclick="returnFromEntryDetail()">
+                    ← Back
                 </a>
 
                 <div class="entry-hero">
@@ -1053,14 +1078,38 @@
 
     <script>
         // Data storage
+        const CAR_DATA = {
+            '530i': {
+                model: "530i",
+                year: 2001,
+                title: "2001 530i",
+                subtitle: "Daily Driver",
+                ownedSince: 2015,
+                badge: "Daily",
+                emoji: "🚗"
+            },
+            'M5': {
+                model: "M5",
+                year: 2001,
+                title: "2001 M5",
+                subtitle: "Weekend Warrior",
+                ownedSince: 2023,
+                badge: "M Power",
+                emoji: "🏁"
+            }
+        };
+
         let entries = JSON.parse(localStorage.getItem('e39Entries') || '[]');
+        let carPhotos = JSON.parse(localStorage.getItem('e39CarPhotos') || '{"530i": null, "M5": null}');
         let currentParts = [];
-        let currentImage = null;
+        let currentPhotos = [];
         let currentEmoji = '🔧';
+        let currentCar = null;
+        let returnView = 'home';
 
         // Initialize
         updateStats();
-        renderEntries();
+        renderCarCards();
 
         // Emoji detection
         function detectEmoji(text) {
@@ -1084,20 +1133,65 @@
             document.getElementById('emoji-display').textContent = currentEmoji;
         }
 
-        // Image upload
-        function handleImageUpload(e) {
-            const file = e.target.files[0];
-            if (file) {
+        // Car photo management
+        function editCarPhoto(carModel, event) {
+            event.stopPropagation();
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'image/*';
+            input.onchange = (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (event) => {
+                        carPhotos[carModel] = event.target.result;
+                        localStorage.setItem('e39CarPhotos', JSON.stringify(carPhotos));
+                        renderCarCards();
+                    };
+                    reader.readAsDataURL(file);
+                }
+            };
+            input.click();
+        }
+
+        // Entry photos
+        function handleEntryPhotos(e) {
+            const files = Array.from(e.target.files);
+            files.forEach(file => {
                 const reader = new FileReader();
-                reader.onload = function(event) {
-                    currentImage = event.target.result;
-                    document.getElementById('upload-placeholder').classList.add('hidden');
-                    const preview = document.getElementById('image-preview');
-                    preview.src = currentImage;
-                    preview.classList.remove('hidden');
+                reader.onload = (event) => {
+                    currentPhotos.push(event.target.result);
+                    renderEntryPhotosPreview();
                 };
                 reader.readAsDataURL(file);
-            }
+            });
+        }
+
+        function renderEntryPhotosPreview() {
+            const container = document.getElementById('entry-photos-preview');
+            const photosHtml = currentPhotos.map((photo, i) => `
+                <div class="gallery-item">
+                    <img src="${photo}" alt="Photo ${i + 1}" />
+                    <button class="remove-photo" onclick="removeEntryPhoto(${i})">×</button>
+                </div>
+            `).join('');
+            
+            container.innerHTML = photosHtml + `
+                <label class="add-photo-btn">
+                    <input 
+                        type="file"
+                        accept="image/*"
+                        multiple
+                        onchange="handleEntryPhotos(event)"
+                    />
+                    📷
+                </label>
+            `;
+        }
+
+        function removeEntryPhoto(index) {
+            currentPhotos.splice(index, 1);
+            renderEntryPhotosPreview();
         }
 
         // Parts management
@@ -1140,7 +1234,7 @@
                 mileage: document.getElementById('entry-mileage').value,
                 cost: document.getElementById('entry-cost').value,
                 parts: currentParts,
-                image: currentImage,
+                photos: currentPhotos,
                 emoji: currentEmoji
             };
 
@@ -1150,54 +1244,143 @@
             // Reset form
             document.getElementById('entry-form').reset();
             currentParts = [];
-            currentImage = null;
+            currentPhotos = [];
             currentEmoji = '🔧';
             document.getElementById('parts-list').innerHTML = '';
-            document.getElementById('upload-placeholder').classList.remove('hidden');
-            document.getElementById('image-preview').classList.add('hidden');
             document.getElementById('emoji-display').textContent = '🔧';
+            renderEntryPhotosPreview();
             
             updateStats();
-            renderEntries();
-            showHome();
+            
+            // Return to appropriate view
+            if (returnView === 'car') {
+                showCarDetail(entry.car);
+            } else {
+                showHome();
+            }
         }
 
-        // Render entries
-        function renderEntries() {
-            const container = document.getElementById('entry-grid');
+        // Render car cards
+        function renderCarCards() {
+            const container = document.getElementById('car-grid');
+            const currentYear = new Date().getFullYear();
             
-            if (entries.length === 0) {
+            container.innerHTML = Object.values(CAR_DATA).map(car => {
+                const yearsOwned = currentYear - car.ownedSince;
+                const carEntries = entries.filter(e => e.car === car.model).length;
+                const photo = carPhotos[car.model];
+                
+                return `
+                    <div class="car-card" onclick="showCarDetail('${car.model}')">
+                        <div class="car-image">
+                            ${photo ? `<img src="${photo}" alt="${car.title}" />` : `<span>${car.emoji}</span>`}
+                            <div class="car-badge">${car.badge}</div>
+                            <button class="edit-car-photo" onclick="editCarPhoto('${car.model}', event)">
+                                📷 Edit Photo
+                            </button>
+                        </div>
+                        <div class="car-content">
+                            <h3 class="car-title">${car.title}</h3>
+                            <p class="car-subtitle">${car.subtitle}</p>
+                            <div class="car-stats">
+                                <div class="car-stat-item">
+                                    <span class="car-stat-value">${yearsOwned}</span>
+                                    <span class="car-stat-label">Years Owned</span>
+                                </div>
+                                <div class="car-stat-item">
+                                    <span class="car-stat-value">${carEntries}</span>
+                                    <span class="car-stat-label">Entries</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Show car detail
+        function showCarDetail(carModel) {
+            currentCar = carModel;
+            const car = CAR_DATA[carModel];
+            const carEntries = entries.filter(e => e.car === carModel);
+            const currentYear = new Date().getFullYear();
+            const yearsOwned = currentYear - car.ownedSince;
+            const photo = carPhotos[carModel];
+
+            // Update car image
+            const imageHtml = photo 
+                ? `<img src="${photo}" alt="${car.title}" />`
+                : `<span>${car.emoji}</span>`;
+            document.getElementById('car-detail-image').innerHTML = imageHtml;
+
+            // Update title and stats
+            document.getElementById('car-detail-title').textContent = car.title;
+            document.getElementById('car-detail-stats').innerHTML = `
+                <div class="detail-item">
+                    <span class="detail-label">Model</span>
+                    <span class="detail-value">${car.subtitle}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Year</span>
+                    <span class="detail-value">${car.year}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Years Owned</span>
+                    <span class="detail-value">${yearsOwned}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Total Entries</span>
+                    <span class="detail-value">${carEntries.length}</span>
+                </div>
+            `;
+
+            // Update subtitle
+            document.getElementById('car-entries-subtitle').textContent = 
+                carEntries.length > 0 ? `${carEntries.length} entries for this car` : 'No entries yet - add your first one!';
+
+            // Render entries for this car
+            renderCarEntries(carModel);
+
+            showView('car-view');
+        }
+
+        // Render entries for specific car
+        function renderCarEntries(carModel) {
+            const container = document.getElementById('car-entry-grid');
+            const carEntries = entries.filter(e => e.car === carModel);
+            
+            if (carEntries.length === 0) {
                 container.innerHTML = `
                     <div class="empty-state" style="grid-column: 1/-1;">
                         <div class="empty-state-icon">🔧</div>
                         <h3>No Entries Yet</h3>
-                        <p>Click '+ Add Entry' to start documenting your work!</p>
+                        <p>Click '+ Add Entry' to start documenting work on this car!</p>
                     </div>
                 `;
                 return;
             }
 
-            container.innerHTML = entries.map(entry => `
-                <div class="entry-card" onclick="showEntryDetail(${entry.id})">
-                    <div class="entry-image">
-                        ${entry.image ? `<img src="${entry.image}" alt="${entry.title}" />` : `<span>${entry.emoji}</span>`}
-                    </div>
-                    <div class="entry-content">
-                        <span class="entry-tag ${entry.type === 'maintenance' ? 'maintenance' : ''}">
-                            ${entry.type === 'project' ? 'Project' : 'Maintenance'}
-                        </span>
-                        <h3 class="entry-title">${entry.title}</h3>
-                        <p class="entry-description">${entry.description}</p>
-                        <div class="entry-footer">
-                            <div class="entry-author">
-                                <div class="author-avatar">ME</div>
-                                <span>${entry.car}</span>
+            container.innerHTML = carEntries.map(entry => {
+                const mainPhoto = entry.photos && entry.photos.length > 0 ? entry.photos[0] : null;
+                return `
+                    <div class="entry-card" onclick="showEntryDetail(${entry.id}, 'car')">
+                        <div class="entry-image">
+                            ${mainPhoto ? `<img src="${mainPhoto}" alt="${entry.title}" />` : `<span>${entry.emoji}</span>`}
+                        </div>
+                        <div class="entry-content">
+                            <span class="entry-tag ${entry.type === 'maintenance' ? 'maintenance' : ''}">
+                                ${entry.type === 'project' ? 'Project' : 'Maintenance'}
+                            </span>
+                            <h3 class="entry-title">${entry.title}</h3>
+                            <p class="entry-description">${entry.description}</p>
+                            <div class="entry-footer">
+                                <span>${entry.date}</span>
+                                ${entry.photos ? `<span>📷 ${entry.photos.length}</span>` : ''}
                             </div>
-                            <span>${entry.date}</span>
                         </div>
                     </div>
-                </div>
-            `).join('');
+                `;
+            }).join('');
         }
 
         // Update stats
@@ -1205,17 +1388,18 @@
             document.getElementById('total-entries').textContent = entries.length;
             const currentYear = new Date().getFullYear();
             document.getElementById('years-exp').textContent = currentYear - 2015;
-            document.getElementById('530i-years').textContent = currentYear - 2015;
-            document.getElementById('m5-years').textContent = currentYear - 2023;
         }
 
         // Show entry detail
-        function showEntryDetail(id) {
+        function showEntryDetail(id, fromView = 'home') {
+            returnView = fromView;
             const entry = entries.find(e => e.id === id);
             if (!entry) return;
 
-            const imageHtml = entry.image 
-                ? `<img src="${entry.image}" alt="${entry.title}" />`
+            // Main image or emoji
+            const mainPhoto = entry.photos && entry.photos.length > 0 ? entry.photos[0] : null;
+            const imageHtml = mainPhoto 
+                ? `<img src="${mainPhoto}" alt="${entry.title}" />`
                 : `<span>${entry.emoji}</span>`;
 
             document.getElementById('detail-image').innerHTML = imageHtml;
@@ -1264,6 +1448,21 @@
                 `;
             }
 
+            if (entry.photos && entry.photos.length > 1) {
+                contentHtml += `
+                    <div style="margin-top: 1.5rem;">
+                        <h3 style="font-size: 1.2rem; margin-bottom: 0.8rem;">Photo Gallery</h3>
+                        <div class="photo-gallery">
+                            ${entry.photos.map(photo => `
+                                <div class="gallery-item">
+                                    <img src="${photo}" alt="Project photo" />
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+
             document.getElementById('detail-content').innerHTML = contentHtml;
 
             showView('entry-detail-view');
@@ -1272,6 +1471,7 @@
         // View management
         function showView(viewId) {
             document.getElementById('home-view').classList.add('hidden');
+            document.getElementById('car-view').classList.add('hidden');
             document.getElementById('add-entry-view').classList.add('hidden');
             document.getElementById('entry-detail-view').classList.add('hidden');
             document.getElementById(viewId).classList.remove('hidden');
@@ -1279,11 +1479,36 @@
         }
 
         function showHome() {
+            currentCar = null;
+            returnView = 'home';
+            renderCarCards();
             showView('home-view');
         }
 
         function showAddEntry() {
+            if (currentCar) {
+                document.getElementById('entry-car').value = currentCar;
+                returnView = 'car';
+            } else {
+                returnView = 'home';
+            }
             showView('add-entry-view');
+        }
+
+        function returnFromAddEntry() {
+            if (returnView === 'car' && currentCar) {
+                showCarDetail(currentCar);
+            } else {
+                showHome();
+            }
+        }
+
+        function returnFromEntryDetail() {
+            if (returnView === 'car' && currentCar) {
+                showCarDetail(currentCar);
+            } else {
+                showHome();
+            }
         }
     </script>
 </body>
