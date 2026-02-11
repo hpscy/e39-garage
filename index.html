@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>E39 Garage - BMW E39 Projects & Tips</title>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         :root {
             --primary: #2196F3;
@@ -33,6 +34,39 @@
         }
 
         .hidden { display: none !important; }
+
+        /* Loading overlay */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(26, 29, 36, 0.95);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+        }
+
+        .loading-spinner {
+            text-align: center;
+        }
+
+        .spinner {
+            border: 4px solid var(--border);
+            border-top: 4px solid var(--primary);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
 
         /* Header */
         header {
@@ -810,8 +844,16 @@
     </style>
 </head>
 <body>
+    <!-- Loading Overlay -->
+    <div id="loading" class="loading-overlay">
+        <div class="loading-spinner">
+            <div class="spinner"></div>
+            <div>Loading your garage...</div>
+        </div>
+    </div>
+
     <!-- Home View -->
-    <div id="home-view">
+    <div id="home-view" class="hidden">
         <header>
             <nav>
                 <div class="logo" onclick="showHome()">E39 <span>Garage</span></div>
@@ -857,7 +899,7 @@
         <footer>
             <p>E39 Garage - A hobbyist's collection of BMW E39 projects and tips</p>
             <p style="margin-top: 0.5rem; font-size: 0.85rem;">
-                Built with ❤️ for the E39 community • Data saved locally in your browser
+                Built with ❤️ for the E39 community • Powered by Supabase
             </p>
         </footer>
     </div>
@@ -1041,7 +1083,7 @@
                             <button type="button" class="btn btn-secondary" onclick="returnFromAddEntry()">
                                 Cancel
                             </button>
-                            <button type="submit" class="btn btn-success">
+                            <button type="submit" class="btn btn-success" id="save-btn">
                                 Save Entry
                             </button>
                         </div>
@@ -1077,7 +1119,12 @@
     </div>
 
     <script>
-        // Data storage
+        // Initialize Supabase
+        const SUPABASE_URL = 'https://uwjjihvsewmviziezfkw.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV3amppCB2c2V3bXZpemllemZrdyIsInJvbGUiOiJhbm9uIiwiaWF0IjoxNzM5NDkzMzQzLCJleHAiOjIwNTUwNjkzNDN9.vR1bwKPBE3ZwJ9b_Q5FYvCbvPCYOQvvMj85-Mup-8fk';
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        // Car data
         const CAR_DATA = {
             '530i': {
                 model: "530i",
@@ -1099,17 +1146,70 @@
             }
         };
 
-        let entries = JSON.parse(localStorage.getItem('e39Entries') || '[]');
-        let carPhotos = JSON.parse(localStorage.getItem('e39CarPhotos') || '{"530i": null, "M5": null}');
+        let entries = [];
+        let carPhotos = {};
         let currentParts = [];
         let currentPhotos = [];
+        let currentPhotoFiles = [];
         let currentEmoji = '🔧';
         let currentCar = null;
         let returnView = 'home';
 
-        // Initialize
-        updateStats();
-        renderCarCards();
+        // Initialize app
+        async function initApp() {
+            try {
+                // Load entries
+                const { data: entriesData, error: entriesError } = await supabase
+                    .from('entries')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+                
+                if (entriesError) throw entriesError;
+                entries = entriesData || [];
+
+                // Load car photos
+                const { data: carPhotosData, error: carPhotosError } = await supabase
+                    .from('car_photos')
+                    .select('*');
+                
+                if (carPhotosError) throw carPhotosError;
+                carPhotos = {};
+                if (carPhotosData) {
+                    carPhotosData.forEach(cp => {
+                        carPhotos[cp.car] = cp.photo_url;
+                    });
+                }
+
+                updateStats();
+                renderCarCards();
+                
+                // Hide loading, show home
+                document.getElementById('loading').classList.add('hidden');
+                document.getElementById('home-view').classList.remove('hidden');
+            } catch (error) {
+                console.error('Error loading data:', error);
+                alert('Error loading data. Please refresh the page.');
+            }
+        }
+
+        // Upload file to Supabase Storage
+        async function uploadPhoto(file, path) {
+            const { data, error } = await supabase.storage
+                .from('photos')
+                .upload(path, file, {
+                    cacheControl: '3600',
+                    upsert: true
+                });
+
+            if (error) throw error;
+
+            // Get public URL
+            const { data: urlData } = supabase.storage
+                .from('photos')
+                .getPublicUrl(path);
+
+            return urlData.publicUrl;
+        }
 
         // Emoji detection
         function detectEmoji(text) {
@@ -1134,21 +1234,36 @@
         }
 
         // Car photo management
-        function editCarPhoto(carModel, event) {
+        async function editCarPhoto(carModel, event) {
             event.stopPropagation();
             const input = document.createElement('input');
             input.type = 'file';
             input.accept = 'image/*';
-            input.onchange = (e) => {
+            input.onchange = async (e) => {
                 const file = e.target.files[0];
                 if (file) {
-                    const reader = new FileReader();
-                    reader.onload = (event) => {
-                        carPhotos[carModel] = event.target.result;
-                        localStorage.setItem('e39CarPhotos', JSON.stringify(carPhotos));
+                    try {
+                        showLoading();
+                        
+                        // Upload to Supabase
+                        const fileName = `car-${carModel}-${Date.now()}.${file.name.split('.').pop()}`;
+                        const photoUrl = await uploadPhoto(file, fileName);
+
+                        // Save to database
+                        const { error } = await supabase
+                            .from('car_photos')
+                            .upsert({ car: carModel, photo_url: photoUrl });
+
+                        if (error) throw error;
+
+                        carPhotos[carModel] = photoUrl;
                         renderCarCards();
-                    };
-                    reader.readAsDataURL(file);
+                        hideLoading();
+                    } catch (error) {
+                        console.error('Error uploading car photo:', error);
+                        alert('Error uploading photo. Please try again.');
+                        hideLoading();
+                    }
                 }
             };
             input.click();
@@ -1158,6 +1273,7 @@
         function handleEntryPhotos(e) {
             const files = Array.from(e.target.files);
             files.forEach(file => {
+                currentPhotoFiles.push(file);
                 const reader = new FileReader();
                 reader.onload = (event) => {
                     currentPhotos.push(event.target.result);
@@ -1191,6 +1307,7 @@
 
         function removeEntryPhoto(index) {
             currentPhotos.splice(index, 1);
+            currentPhotoFiles.splice(index, 1);
             renderEntryPhotosPreview();
         }
 
@@ -1221,42 +1338,74 @@
         }
 
         // Save entry
-        function saveEntry(e) {
+        async function saveEntry(e) {
             e.preventDefault();
             
-            const entry = {
-                id: Date.now(),
-                car: document.getElementById('entry-car').value,
-                type: document.getElementById('entry-type').value,
-                title: document.getElementById('entry-title').value,
-                description: document.getElementById('entry-description').value,
-                date: document.getElementById('entry-date').value,
-                mileage: document.getElementById('entry-mileage').value,
-                cost: document.getElementById('entry-cost').value,
-                parts: currentParts,
-                photos: currentPhotos,
-                emoji: currentEmoji
-            };
+            const saveBtn = document.getElementById('save-btn');
+            saveBtn.disabled = true;
+            saveBtn.textContent = 'Saving...';
 
-            entries.push(entry);
-            localStorage.setItem('e39Entries', JSON.stringify(entries));
-            
-            // Reset form
-            document.getElementById('entry-form').reset();
-            currentParts = [];
-            currentPhotos = [];
-            currentEmoji = '🔧';
-            document.getElementById('parts-list').innerHTML = '';
-            document.getElementById('emoji-display').textContent = '🔧';
-            renderEntryPhotosPreview();
-            
-            updateStats();
-            
-            // Return to appropriate view
-            if (returnView === 'car') {
-                showCarDetail(entry.car);
-            } else {
-                showHome();
+            try {
+                // Upload photos to Supabase
+                const photoUrls = [];
+                for (let i = 0; i < currentPhotoFiles.length; i++) {
+                    const file = currentPhotoFiles[i];
+                    const fileName = `entry-${Date.now()}-${i}.${file.name.split('.').pop()}`;
+                    const url = await uploadPhoto(file, fileName);
+                    photoUrls.push(url);
+                }
+
+                // Create entry object
+                const entry = {
+                    car: document.getElementById('entry-car').value,
+                    type: document.getElementById('entry-type').value,
+                    title: document.getElementById('entry-title').value,
+                    description: document.getElementById('entry-description').value,
+                    date: document.getElementById('entry-date').value,
+                    mileage: document.getElementById('entry-mileage').value,
+                    cost: document.getElementById('entry-cost').value,
+                    parts: currentParts,
+                    photos: photoUrls,
+                    emoji: currentEmoji
+                };
+
+                // Save to Supabase
+                const { data, error } = await supabase
+                    .from('entries')
+                    .insert([entry])
+                    .select();
+
+                if (error) throw error;
+
+                // Add to local array
+                entries.unshift(data[0]);
+
+                // Reset form
+                document.getElementById('entry-form').reset();
+                currentParts = [];
+                currentPhotos = [];
+                currentPhotoFiles = [];
+                currentEmoji = '🔧';
+                document.getElementById('parts-list').innerHTML = '';
+                document.getElementById('emoji-display').textContent = '🔧';
+                renderEntryPhotosPreview();
+                
+                updateStats();
+                
+                saveBtn.disabled = false;
+                saveBtn.textContent = 'Save Entry';
+
+                // Return to appropriate view
+                if (returnView === 'car') {
+                    showCarDetail(entry.car);
+                } else {
+                    showHome();
+                }
+            } catch (error) {
+                console.error('Error saving entry:', error);
+                alert('Error saving entry. Please try again.');
+                saveBtn.disabled = false;
+                saveBtn.textContent = 'Save Entry';
             }
         }
 
@@ -1307,13 +1456,11 @@
             const yearsOwned = currentYear - car.ownedSince;
             const photo = carPhotos[carModel];
 
-            // Update car image
             const imageHtml = photo 
                 ? `<img src="${photo}" alt="${car.title}" />`
                 : `<span>${car.emoji}</span>`;
             document.getElementById('car-detail-image').innerHTML = imageHtml;
 
-            // Update title and stats
             document.getElementById('car-detail-title').textContent = car.title;
             document.getElementById('car-detail-stats').innerHTML = `
                 <div class="detail-item">
@@ -1334,13 +1481,10 @@
                 </div>
             `;
 
-            // Update subtitle
             document.getElementById('car-entries-subtitle').textContent = 
                 carEntries.length > 0 ? `${carEntries.length} entries for this car` : 'No entries yet - add your first one!';
 
-            // Render entries for this car
             renderCarEntries(carModel);
-
             showView('car-view');
         }
 
@@ -1375,7 +1519,7 @@
                             <p class="entry-description">${entry.description}</p>
                             <div class="entry-footer">
                                 <span>${entry.date}</span>
-                                ${entry.photos ? `<span>📷 ${entry.photos.length}</span>` : ''}
+                                ${entry.photos && entry.photos.length > 0 ? `<span>📷 ${entry.photos.length}</span>` : ''}
                             </div>
                         </div>
                     </div>
@@ -1396,7 +1540,6 @@
             const entry = entries.find(e => e.id === id);
             if (!entry) return;
 
-            // Main image or emoji
             const mainPhoto = entry.photos && entry.photos.length > 0 ? entry.photos[0] : null;
             const imageHtml = mainPhoto 
                 ? `<img src="${mainPhoto}" alt="${entry.title}" />`
@@ -1464,7 +1607,6 @@
             }
 
             document.getElementById('detail-content').innerHTML = contentHtml;
-
             showView('entry-detail-view');
         }
 
@@ -1510,6 +1652,17 @@
                 showHome();
             }
         }
+
+        function showLoading() {
+            document.getElementById('loading').classList.remove('hidden');
+        }
+
+        function hideLoading() {
+            document.getElementById('loading').classList.add('hidden');
+        }
+
+        // Initialize on page load
+        initApp();
     </script>
 </body>
 </html>
